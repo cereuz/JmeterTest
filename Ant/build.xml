@@ -1,0 +1,100 @@
+<?xml version="1.0"?>  
+<project name="HelloWorld" default="zao" basedir="">  
+    <!-- 基础测试 输出--> 
+    <target name="zao">  
+        <echo message="test echo messsage, basedir=${basedir}" />  
+    </target>
+    <!-- <property>标签，用于声明键值对。 测试配置文件，测试路径 -->
+    <!-- （1）build.xml需要遵循一定的格式，这样ant命令才能正确执行，一个build.xml文件是以<project>标签为根节点的，<project>节点中可以指定name属性，表示项目的名称，basedir代表项目的根目录，default表示项目的默认任务名，这里的default属性值为test，则执行ant命令时会找default对应的target去执行（如果ant命令没有指定任务名的话）。
+    （2）<project>标签中定义了一个<target>标签，该标签表示的就是一个任务，<target>标签中的name属性表示任务名，我们可以在命令行下直接使用ant + 任务名来执行某个特定的任务，例如上面的例子中，我们可以使用ant test命令去执行name值为test的target任务，由于我们在<project>标签中配置了default属性为test，所以在命令行下只需要执行ant命令就可以运行test任务了。
+    （3）<echo>标签表示在命令行下输出，类似于java中的System.out.println()，在<echo>标签中配置message属性后即可在命令行下打印该属性的值。如上图中显示的[echo]，即为我们配置的message属性的值。
+    （4）使用${}可以获取某个变量的值，花括号中为变量名，如上图中打印出的C:\Users\yubo7\Desktop\TestAnt，即为basedir的值，由于在<project>标签中我们给basedir属性的值为空，所以basedir的值默认为build.xml所在的路径。 --> 	
+    <target name="test-zao">  
+        <property name="name" value="zao" />  
+        <property name="age" value="25" />  
+        <echo message="this is target test2." />  
+        <echo message="java version: ${ant.java.version}" />  
+        <echo message="project name: ${ant.project.name}" />  
+        <echo message="ant file: ${ant.file}" />  
+        <echo message="name = ${name}, age = ${age}" />  
+    </target> 
+	
+	<!-- copy文件 -->
+	<target name="test-copy">  
+        <copy file="test.txt" tofile="build/test.txt" />  
+    </target>
+	<!-- copy 拷贝整个目录 -->
+    <target name="test-copy-dir">  
+        <copy todir="build/dest_dir">  
+            <fileset dir="origin_dir" />  
+        </copy>  
+    </target> 
+	
+    <!-- delete 删除单个文件 -->  
+    <target name="test-del-file">  
+        <delete file="test.txt" />  
+    </target>  
+  
+    <!-- <delete> 删除整个目录 -->  
+    <target name="test-del-dir">  
+        <delete dir="origin_dir" />  
+    </target>
+	
+	<!-- <mkdir>标签，用于目录的创建 -->
+    <target name="test-mkdir">  
+        <mkdir dir="test" />  
+    </target>   
+
+	<!-- <javac>标签，用于将.java文件编译成.class文件 -->
+    <target name="test-compile">  
+        <javac srcdir="src" destdir="build/classes/" />  
+    </target>   
+	
+	<!-- <java>标签，用于执行.class文件 -->
+	<!-- <java>标签中的classname属性，指定了要执行的main class名，<classpath>标签中的<pathelement>标签，指定了class文件的路径。 -->
+	<target name="test-run-java">  
+        <java classname="Test">  
+            <classpath>  
+                <pathelement path="build/classes" />  
+            </classpath>  
+        </java>
+        <java classname="Test2">  
+            <classpath>  
+                <pathelement path="build/classes" />  
+            </classpath>  
+        </java>
+        <java classname="Test3">  
+            <classpath>  
+                <pathelement path="build/classes" />  
+            </classpath>  
+        </java>		
+    </target>  
+	
+	<!-- <jar>标签，用于将java程序打包成jar文件 -->
+	<target name="jar">  
+        <jar destfile="add.jar" basedir="build/classes/">  
+            <manifest>  
+                <attribute name="Main-class" value="Add" />  
+            </manifest>  
+        </jar>  
+    </target>  
+    <!-- <jar>标签中的destfile属性表示要生成的jar文件，basedir指定class文件的路径，<manifest>标签指定了jar包中的MANIFEST.MF文件中的属性，里面配置Main-class，即主class名称为"Add"。 -->
+	
+	<!-- depends 任务依赖-->
+	<!--创建目录-->  
+    <target name="mkdir">  
+        <mkdir dir="build/dest" />  
+    </target>  
+  
+    <!--拷贝文件-->  
+    <target name="copy-file" depends="mkdir">  
+        <copy file="test.txt" tofile="build/dest/test.txt" />  
+    </target>  
+  
+    <!--删除文件-->  
+    <target name="delete-file" depends="copy-file">  
+        <delete file="test.txt" />  
+    </target>  
+	<!-- 上面的配置文件中有三个任务，其中copy-file任务和delete-file任务中都含有depends属性，该属性表示执行<target>中的任务时，要依赖depends中指定的任务（depends中指定的任务会先执行），depends属性值就是一个任务名，所以上面的配置文件表示：执行delete-file任务时需要依赖copy-file任务，而执行copy-file任务时需要依赖mkdir任务，<project>标签中的default值为delete-file，则我们执行ant命令时，会找到delete-file任务，但是这个任务又依赖别的任务，则被依赖的任务会先执行，所以上面的配置文件执行的顺序为：mkdir->copy-file->delete-file。 -->
+		
+</project>  

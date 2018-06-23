@@ -76,7 +76,7 @@
         <stringProp name="filename"></stringProp>
       </ResultCollector>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TEST" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TEST" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -474,7 +474,7 @@ $2$:表示取第二个
             <boolProp name="displaySystemProperties">false</boolProp>
           </DebugSampler>
           <hashTree/>
-          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="查看他人详情--Loop Controller" enabled="false">
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="查看他人详情--Loop Controller" enabled="true">
             <boolProp name="LoopController.continue_forever">true</boolProp>
             <stringProp name="LoopController.loops">31</stringProp>
           </LoopController>
@@ -519,7 +519,7 @@ $2$:表示取第二个
             </HTTPSamplerProxy>
             <hashTree/>
           </hashTree>
-          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="关注他人/取消关注;加入黑名单/取消黑名单--Loop Controller" enabled="true">
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="关注他人/取消关注;加入黑名单/取消黑名单--Loop Controller" enabled="false">
             <boolProp name="LoopController.continue_forever">true</boolProp>
             <stringProp name="LoopController.loops">1</stringProp>
           </LoopController>
@@ -2213,14 +2213,14 @@ $2$:表示取第二个
           </hashTree>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Practice" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Practice" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -2279,7 +2279,7 @@ return &quot;add success&quot;;</stringProp>
           <boolProp name="displaySystemProperties">false</boolProp>
         </DebugSampler>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="1. 手机注册/登陆" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="1. 手机注册/登陆" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="phone" elementType="HTTPArgument">
@@ -2341,22 +2341,22 @@ import com.zao.utils.*;
 
 //获取Respone Data 的 token  
 public void test(){
-String jsonContent = prev.getResponseDataAsString();  
-JSONObject response = new JSONObject(jsonContent);  
-String token = response.getJSONObject(&quot;data&quot;).getString(&quot;token&quot;);  
-//写入 Jmeter 的静态调用 
-vars.put(&quot;tokenFromUrl&quot;,token);
-
-//获取时间，并和token拼接在一起
-String tokenText = new GetSystemTime().getSystemTime() + &quot; token  &quot; +  token;
-String pathText = &quot;E:\\java\\java\\Jmeter4.0\\apache-jmeter-4.0\\testuse\\msr0613\\code\\token062301.txt&quot;;
-//写入 Jmeter 的静态调用 
-vars.put(&quot;pathText&quot;,pathText);
-////将 拼接 的字符串写入到指定路径。
-new WriteAndReadFile().writeToFile(tokenText,pathText);
+	String jsonContent = prev.getResponseDataAsString();  
+	JSONObject response = new JSONObject(jsonContent);  
+	String token = response.getJSONObject(&quot;data&quot;).getString(&quot;token&quot;);  
+	//写入 Jmeter 的静态调用 
+	vars.put(&quot;tokenFromUrl&quot;,token);
+	
+	//获取时间，并和token拼接在一起
+	String tokenText = new GetSystemTime().getSystemTime() + &quot;, token  ,&quot; +  token;
+	String pathText = &quot;E:\\java\\java\\Jmeter4.0\\apache-jmeter-4.0\\testuse\\msr0613\\code\\token062301.csv&quot;;
+	//写入 Jmeter 的静态调用 
+	vars.put(&quot;pathText&quot;,pathText);
+	////将 拼接 的字符串写入到指定路径。
+	new WriteAndReadFile().writeToFile(tokenText,pathText);
 }
 
-test();</stringProp>
+    test();</stringProp>
           </BeanShellPostProcessor>
           <hashTree/>
           <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="读取文件BeanShell PreProcessor" enabled="true">
@@ -2367,7 +2367,7 @@ test();</stringProp>
 import com.zao.utils.*;  
 
 int index = 15;
-String pathText = &quot;E:\\java\\java\\Jmeter4.0\\apache-jmeter-4.0\\testuse\\msr0613\\code\\token062301.txt&quot;;
+String pathText = &quot;E:\\java\\java\\Jmeter4.0\\apache-jmeter-4.0\\testuse\\msr0613\\code\\token062301.csv&quot;;
 
 /**
  * @param index     读取的行数，从 0 开始
@@ -2386,7 +2386,7 @@ vars.put(&quot;tokenFromFile(&quot;+ index + &quot;)&quot;,tokenFromFile);
     </stringProp>
           </BeanShellPreProcessor>
           <hashTree/>
-          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器authorizationz" enabled="false">
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器authorizationz" enabled="true">
             <stringProp name="TestPlan.comments">token</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
             <stringProp name="RegexExtractor.refname">authorizationz</stringProp>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ant-jmeter-test" default="run" basedir=".">
+<taskdef resource="net/sf/antcontrib/antlib.xml" />
+ <!-- （1）需要改成自己本地的 Jmeter 目录-->
+<property name="jmeter.home" value="E:\java\java\Jmeter4.0\apache-jmeter-4.0"/>
+<property name="report.title" value="report"/>
+<!-- （2）jmeter生成jtl格式的结果报告的路径-->
+<property name="jmeter.result.jtl.dir" value="E:\java\java\Jmeter4.0\apache-jmeter-4.0\testuse\report\MSRresultLog\jtl"/>
+<!-- （3）jmeter生成html格式的结果报告的路径-->
+<property name="jmeter.result.html.dir" value="E:\java\java\Jmeter4.0\apache-jmeter-4.0\testuse\report\MSRresultLog\html"/>
+<!-- 生成的报告的前缀 --> 
+<property name="ReportName" value="TestReport"/>
+<property name="jmeter.result.jtlName" value="${jmeter.result.jtl.dir}/${ReportName}.jtl"/>
+<property name="jmeter.result.htmlName" value="${jmeter.result.html.dir}/${ReportName}.html"/>
+
+<target name="run"> 
+  <antcall target="test"/>  
+  <antcall target="report"/> 
+  <!--antcall  target="mail"/-->    
+</target>
+<target name="test"> 
+  <taskdef name="jmeter" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask"/>  
+  <jmeter jmeterhome="${jmeter.home}" resultlog="${jmeter.result.jtlName}"> 
+  <!-- （4）build.xml的存放的路径-->
+    <testplans dir="E:\java\java\Jmeter4.0\apache-jmeter-4.0\testuse\msr0613" includes="*.jmx"/>  
+    <property name="jmeter.save.saveservice.output_format" value="xml"/> 
+  </jmeter> 
+</target>
+<path id="xslt.classpath"> 
+  <fileset dir="${jmeter.home}/lib" includes="xalan*.jar"/>  
+  <fileset dir="${jmeter.home}/lib" includes="serializer*.jar"/> 
+</path>
+<target name="report"> 
+  <tstamp> 
+    <format property="report.datestamp" pattern="yyyy/MM/dd HH:mm"/>
+  </tstamp>  
+  <xslt 
+  classpathref="xslt.classpath" 
+  force="true" 
+  in="${jmeter.result.jtlName}"
+  out="${jmeter.result.htmlName}"
+  style="${jmeter.home}/extras/jmeter-results-detail-report_21.xsl"> 
+    <param name="dateReport" expression="${report.datestamp}"/> 
+  </xslt>  
+
+  <copy todir="${jmeter.result.html.dir}"> 
+    <fileset dir="${jmeter.home}/extras"> 
+      <include name="collapse.png"/>  
+      <include name="expand.png"/> 
+    </fileset> 
+  </copy> 
+</target>
+ <path id="lib_classpath">
+        <fileset dir="${basedir}/">
+            <include name="mail*.jar" />
+            <include name="activation*.jar" />
+            <include name="commons-email*.jar" />
+            <include name="ant-contrib*.jar" />
+        </fileset>
+ </path>
+    <!--target name="mail">
+        <for list="hanxm@thunisoft.com" param="tmp" >
+            <sequential>
+              <echo>message @{tmp}</echo> 
+                <mail mailhost="smtp.thunisoft.com" mailport="25" ssl="false" subject="ant mail" messagemimetype="text/html" user="zhangjn" password="*******"  tolist="@{tmp}">
+                    <from address="zhangjn@thunisoft.com" />
+                    <fileset dir="${jmeter.result.html.dir}">
+                       <include name="*.html" />
+                       <include name="*.png" />
+                      </fileset>
+                    <message>支持多人同时发邮件!!&lt;br /&gt;&lt;br /&gt;</message>
+                </mail>
+            </sequential>
+        </for>
+    </target-->
+</project>
